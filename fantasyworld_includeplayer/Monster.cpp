@@ -38,7 +38,7 @@ void Monster::setHP() {
 
 }
 
-void Monster::setLocation(const vector<vector<int>> worldmap) {
+void Monster::setLocation(const std::vector<std::vector<int>> worldmap) {
 	while (true) {
 		locX = rand() % 30;
 		locY = rand() % 30;

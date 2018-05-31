@@ -9,7 +9,7 @@ private:
 	int locX, locY;
 public:
 	Player();
-	~Player();
+	virtual ~Player();
 	void setLocation(int x, int y);
 	bool receivedDamage(int damage);
 	int getHP();

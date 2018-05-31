@@ -4,8 +4,8 @@ Map::Map()
 {
 	assert(MAP_WIDTH * MAP_HEIGHT > MONS_AMOUNT);
 
-	worldmap.resize(MAP_WIDTH, vector<int>(MAP_HEIGHT));
-	playermap.resize(MAP_WIDTH, vector<int>(MAP_HEIGHT));
+	worldmap.resize(MAP_WIDTH, std::vector<int>(MAP_HEIGHT));
+	playermap.resize(MAP_WIDTH, std::vector<int>(MAP_HEIGHT));
 
 	for (int j = 0; j < MAP_HEIGHT; j++) {
 		for (int i = 0; i < MAP_WIDTH; i++) {
@@ -26,10 +26,13 @@ Map::~Map()
 }
 
 void Map::monster_initiation() {
+	SpawnMonster<std::vector<std::shared_ptr<Monster>>> mons(monsters);
+	monsters = mons.push_obj();
+	getchar();
 	for (int i = 0; i < MONS_AMOUNT; i++) {
-		monsters.push_back(make_shared<Monster>());
+		monsters.push_back(std::make_shared<Monster>());
 	}
-	player = make_shared<Player>();
+	player = std::make_shared<Player>();
 }
 
 void Map::createWorld() {
@@ -41,37 +44,37 @@ void Map::createWorld() {
 
 void Map::drawMap() {
 	for (int i = 0; i < 10 / 3; i++) {
-		cout << endl << endl << endl << endl;
+		std::cout << std::endl << std::endl << std::endl << std::endl;
 	}
-	cout << static_cast<char>(TOPLEFT_MAP);
+	std::cout << static_cast<char>(TOPLEFT_MAP);
 	for (int i = 0; i < MAP_WIDTH - 1; i++) {
-		cout << static_cast<char>(MID_MAP) << static_cast<char>(MID_MAP) << static_cast<char>(TOPMID_MAP);
+		std::cout << static_cast<char>(MID_MAP) << static_cast<char>(MID_MAP) << static_cast<char>(TOPMID_MAP);
 	}
-	cout << static_cast<char>(MID_MAP) << static_cast<char>(MID_MAP) << static_cast<char>(TOPRIGHT_MAP) << endl;
+	std::cout << static_cast<char>(MID_MAP) << static_cast<char>(MID_MAP) << static_cast<char>(TOPRIGHT_MAP) << std::endl;
 	for (int j = 0; j < MAP_HEIGHT; j++) {
-		cout << static_cast<char>(SPLITTER);
+		std::cout << static_cast<char>(SPLITTER);
 		for (int i = 0; i < MAP_WIDTH; i++) {
 			if (playermap[i][j] > 0) {
-				cout << "H";
+				std::cout << "H";
 			}
 			else {
-				cout << "-";
+				std::cout << "-";
 			}
 			if (worldmap[i][j] > 0) {
-				cout << "M";
+				std::cout << "M";
 			}
 			else {
-				cout << "-";
+				std::cout << "-";
 			}
-			cout << static_cast<char>(SPLITTER);
+			std::cout << static_cast<char>(SPLITTER);
 		}
-		cout << endl;
+		std::cout << std::endl;
 	}
-	cout << static_cast<char>(BOTLEFT_MAP);
+	std::cout << static_cast<char>(BOTLEFT_MAP);
 	for (int i = 0; i < MAP_WIDTH - 1; i++) {
-		cout << static_cast<char>(MID_MAP) << static_cast<char>(MID_MAP) << static_cast<char>(BOTMID_MAP);
+		std::cout << static_cast<char>(MID_MAP) << static_cast<char>(MID_MAP) << static_cast<char>(BOTMID_MAP);
 	}
-	cout << static_cast<char>(MID_MAP) << static_cast<char>(MID_MAP) << static_cast<char>(BOTRIGHT_MAP) << endl;
+	std::cout << static_cast<char>(MID_MAP) << static_cast<char>(MID_MAP) << static_cast<char>(BOTRIGHT_MAP) << std::endl;
 }
 
 void Map::updateMap() {
@@ -88,13 +91,13 @@ void Map::updateMap() {
 	drawMap();
 	for (int i = 0; i < MONS_AMOUNT; i++) {
 		if (monsters[i]->getLocX() == player->getLocX() && monsters[i]->getLocY() == player->getLocY()) {
-			cout << "Player fight with a monster" << endl;
-			cout << "Monster: " << monsters[i]->getHealth() << " - " << player->getAtk() << " = ";
+			std::cout << "Player fight with a monster" << std::endl;
+			std::cout << "Monster: " << monsters[i]->getHealth() << " - " << player->getAtk() << " = ";
 			monsters[i]->reduceHP(player->getAtk());
-			cout << monsters[i]->getHealth() << endl;
-			cout << "Player: " << player->getHP() << " - " << monsters[i]->getHealth() << " = ";
+			std::cout << monsters[i]->getHealth() << std::endl;
+			std::cout << "Player: " << player->getHP() << " - " << monsters[i]->getHealth() << " = ";
 			gameover = player->receivedDamage(monsters[i]->getAtk());
-			cout << player->getHP() << endl;
+			std::cout << player->getHP() << std::endl;
 		}
 	}
 	input = 0;
@@ -106,13 +109,13 @@ void Map::summon_world_clock() {
 	t1 = clock();
 	while (true) {
 		t2 = clock();
-		diff = ((float)t2 - (float)t1) / CLOCKS_PER_SEC;
-		if (diff > 1.0) {
+		diff = (static_cast<float>(t2) - static_cast<float>(t1)) / CLOCKS_PER_SEC;
+		if (diff > 0.0) {
 			t1 = clock();
 			this->updateMap();
 		}
 		if (gameover) {
-			cout << endl << "Game Over";
+			std::cout << std::endl << "Game Over";
 			setInput();
 			break;
 		}
@@ -120,7 +123,7 @@ void Map::summon_world_clock() {
 }
 
 char Map::setInput() {
-	return _getche();
+	return static_cast<char>(_getche());
 }
 
 void Map::activeInput() {

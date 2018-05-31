@@ -7,7 +7,7 @@ class Orc
 
 public:
 	Orc();
-	~Orc();
+	virtual ~Orc();
 	int getHP();
 	int getATK();
 	std::string getType();
